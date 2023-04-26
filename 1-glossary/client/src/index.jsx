@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { StrictMode } from 'react';
 import { render } from 'react-dom';
 
+import App from './App.jsx';
+
 render(
-  <div>
-    <p>Hello, World!</p>
-  </div>,
+  <StrictMode>
+    <App />
+  </StrictMode>,
   document.getElementById('root')
 );
