@@ -1,23 +1,37 @@
 import React, { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 
 const GlossaryForm = ({ glossary, setGlossary }) => {
   const [term, setTerm] = useState('');
   const [description, setDescription] = useState('');
 
-  const handleAdd = (newItem) => {
-    if (
-      glossary.some(
-        (item) => item.term.toLowerCase() === newItem.term.toLowerCase()
-      )
-    ) {
+  const handleAdd = async(newItem) => {
+    if (glossary.some(
+      (item) => item.term.toLowerCase() === newItem.term.toLowerCase()
+    )) {
       alert(`${newItem.term} is already in the glossary.`);
       return;
     }
-    setGlossary((prevGlossary) => [
-      ...prevGlossary,
-      { ...newItem, id: uuidv4() },
-    ]);
+
+    try {
+      const response = await fetch('/api/glossary', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newItem),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+
+        setGlossary((prevGlossary) => [
+          ...prevGlossary,
+          data,
+        ]);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleSubmit = (event) => {

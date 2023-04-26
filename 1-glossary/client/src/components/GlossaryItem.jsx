@@ -7,7 +7,7 @@ const GlossaryItem = ({ item, onEdit, onDelete }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    onEdit(item.id, { term, description });
+    onEdit({ _id: item._id, term, description });
     setEditing(false);
   };
 
@@ -18,7 +18,7 @@ const GlossaryItem = ({ item, onEdit, onDelete }) => {
   };
 
   const handleDelete = () => {
-    onDelete(item.id);
+    onDelete(item._id);
   };
 
   return (

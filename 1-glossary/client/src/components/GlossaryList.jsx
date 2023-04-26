@@ -5,14 +5,14 @@ import GlossaryItem from './GlossaryItem.jsx';
 const GlossaryList = ({ glossary, setGlossary, searchTerm, filteredGlossary }) => {
   const handleDelete = (id) => {
     setGlossary((prevGlossary) =>
-      prevGlossary.filter((item) => item.id !== id)
+      prevGlossary.filter((item) => item._id !== id)
     );
   };
 
-  const handleEdit = (id, item) => {
+  const handleEdit = (item) => {
     const termExists = glossary.some(
       (existingItem) =>
-        existingItem.id !== id && existingItem.term === item.term
+        existingItem._id !== item._id && existingItem.term === item.term
     );
 
     if (termExists) {
@@ -21,7 +21,7 @@ const GlossaryList = ({ glossary, setGlossary, searchTerm, filteredGlossary }) =
     }
 
     setGlossary((prevGlossary) => {
-      const index = prevGlossary.findIndex((item) => item.id === id);
+      const index = prevGlossary.findIndex((item) => item._id === id);
       const oldItem = prevGlossary[index];
       const newItem = { ...oldItem, ...item };
       const before = prevGlossary.slice(0, index);
@@ -36,7 +36,7 @@ const GlossaryList = ({ glossary, setGlossary, searchTerm, filteredGlossary }) =
       <dl>
         {(filteredGlossary.length === 0 ? glossary : filteredGlossary).map((item) => (
           <GlossaryItem
-            key={item.id}
+            key={item._id}
             item={item}
             onEdit={handleEdit}
             onDelete={handleDelete}

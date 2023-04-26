@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import GlossaryForm from './GlossaryForm.jsx';
 import GlossaryList from './GlossaryList.jsx';
@@ -8,6 +8,16 @@ const Glossary = () => {
   const [glossary, setGlossary] = React.useState([]);
   const [searchTerm, setSearchTerm] = React.useState('');
   const [filteredGlossary, setFilteredGlossary] = React.useState([]);
+
+  const fetchGlossary = async() => {
+    const response = await fetch('/api/glossary');
+    const data = await response.json();
+    setGlossary(data);
+  };
+
+  useEffect(() => {
+    fetchGlossary();
+  }, []);
 
   return (
     <div>
