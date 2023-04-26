@@ -2,7 +2,7 @@ import React from 'react';
 
 import GlossaryItem from './GlossaryItem.jsx';
 
-const GlossaryList = ({ glossary, setGlossary }) => {
+const GlossaryList = ({ glossary, setGlossary, searchTerm, filteredGlossary }) => {
   const handleDelete = (id) => {
     setGlossary((prevGlossary) =>
       prevGlossary.filter((item) => item.id !== id)
@@ -31,16 +31,19 @@ const GlossaryList = ({ glossary, setGlossary }) => {
   };
 
   return (
-    <dl>
-      {glossary.map((item) => (
-        <GlossaryItem
-          key={item.id}
-          item={item}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
-      ))}
-    </dl>
+    <>
+      {searchTerm !== '' && filteredGlossary.length === 0 && <p>No terms found.</p>}
+      <dl>
+        {(filteredGlossary.length === 0 ? glossary : filteredGlossary).map((item) => (
+          <GlossaryItem
+            key={item.id}
+            item={item}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+        ))}
+      </dl>
+    </>
   );
 };
 
