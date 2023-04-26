@@ -3,13 +3,23 @@ import React from 'react';
 import GlossaryItem from './GlossaryItem.jsx';
 
 const GlossaryList = ({ glossary, setGlossary, searchTerm, filteredGlossary }) => {
-  const handleDelete = (id) => {
-    setGlossary((prevGlossary) =>
-      prevGlossary.filter((item) => item._id !== id)
-    );
+  const handleDelete = async(id) => {
+    try {
+      const response = await fetch(`/api/glossary/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        setGlossary((prevGlossary) =>
+          prevGlossary.filter((item) => item._id !== id)
+        );
+      }
+    } catch (error) {
+      console.error('Error deleting term: ', error);
+    }
   };
 
-  const handleEdit = (item) => {
+  const handleEdit = async(item) => {
     const termExists = glossary.some(
       (existingItem) =>
         existingItem._id !== item._id && existingItem.term === item.term
@@ -20,14 +30,26 @@ const GlossaryList = ({ glossary, setGlossary, searchTerm, filteredGlossary }) =
       return;
     }
 
-    setGlossary((prevGlossary) => {
-      const index = prevGlossary.findIndex((item) => item._id === id);
-      const oldItem = prevGlossary[index];
-      const newItem = { ...oldItem, ...item };
-      const before = prevGlossary.slice(0, index);
-      const after = prevGlossary.slice(index + 1);
-      return [...before, newItem, ...after];
-    });
+    try {
+      const response = await fetch(`/api/glossary/${item._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(item),
+      });
+
+      if (response.ok) {
+        const updatedTerm = await response.json();
+        setGlossary((prevGlossary) =>
+          prevGlossary.map((term) =>
+            term._id === updatedTerm._id ? updatedTerm : term
+          )
+        );
+      }
+    } catch (error) {
+      console.error('Error updating term: ', error);
+    }
   };
 
   return (

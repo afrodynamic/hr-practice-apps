@@ -53,6 +53,37 @@ app.post('/api/glossary', (request, response) => {
   });
 });
 
+app.put('/api/glossary/:id', (request, response) => {
+  console.log('Updating glossary term:', request.body);
+
+  Glossary.findByIdAndUpdate(
+    request.params.id,
+    { $set: { term: request.body.term, description: request.body.description } },
+    { new: true },
+    (error, results) => {
+      if (error) {
+        console.log('Error updating glossary term:', error);
+        response.sendStatus(500);
+      }
+      console.log('Updated glossary term:', results);
+      response.json(results);
+    });
+});
+
+app.delete('/api/glossary/:id', (request, response) => {
+  console.log('Deleting glossary term:', request.params.id);
+
+  Glossary.findByIdAndDelete(request.params.id, (error, results) => {
+    if (error) {
+      console.log('Error deleting glossary term:', error);
+      response.sendStatus(500);
+    }
+
+    console.log('Deleted glossary term:', results);
+    response.json(results);
+  });
+});
+
 app.listen(port);
 
 console.log(`Listening at http://localhost:${port}`);
