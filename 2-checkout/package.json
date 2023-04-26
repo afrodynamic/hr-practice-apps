@@ -4,7 +4,7 @@
   "main": "server/index.js",
   "scripts": {
     "server-dev": "npx nodemon --watch server server/index.js",
-    "client-dev": "npx webpack --watch",
+    "client-dev": "npx webpack serve --hot",
     "build": "npx webpack",
     "start": "node server/index.js"
   },
@@ -23,11 +23,14 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "uuid": "^8.3.2",
-    "webpack": "^5.41.0",
-    "webpack-cli": "^4.7.2"
+    "webpack": "^5.81.0"
   },
   "devDependencies": {
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
     "eslint": "^8.39.0",
-    "eslint-plugin-react": "^7.32.2"
+    "eslint-plugin-react": "^7.32.2",
+    "react-refresh": "^0.14.0",
+    "webpack-cli": "^5.0.2",
+    "webpack-dev-server": "^4.13.3"
   }
 }
