@@ -1,19 +1,29 @@
-require("dotenv").config();
-const express = require("express");
-const path = require("path");
+require('dotenv').config();
+const express = require('express');
+const path = require('path');
+const httpProxy = require('http-proxy');
 
 const app = express();
 
 // Serves up all static and generated assets in ../client/dist.
-app.use(express.static(path.join(__dirname, "../client/dist")));
+app.use(express.static(path.join(__dirname, '../client/dist')));
 
-/**** 
- * 
- * 
- * Other routes here....
- *
- * 
- */
+const port = process.env.PORT || 3000;
 
-app.listen(process.env.PORT);
-console.log(`Listening at http://localhost:${process.env.PORT}`);
+const proxy = httpProxy.createProxyServer();
+
+const devServerProxy = (request, response, next) => {
+  if (request.url.startsWith('/client/dist/')) {
+    proxy.web(request, response, {
+      target: 'http://localhost:8080',
+    });
+  } else {
+    next();
+  }
+};
+
+app.use(devServerProxy);
+
+app.listen(port);
+
+console.log(`Listening at http://localhost:${port}`);
