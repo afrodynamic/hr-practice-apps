@@ -2,16 +2,21 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { reset, setCompleted } from './checkoutSlice.js';
+import { nextStep, previousStep, reset, saveCheckoutData, setCompleted } from './checkoutSlice.js';
 
 const CheckoutConfirmation = () => {
   const dispatch = useDispatch();
   const { form1, form2, form3 } = useSelector((state) => state.checkout);
+  const checkoutData = useSelector((state) => state.checkout);
 
   const handleCompletePurchase = () => {
     dispatch(setCompleted());
+    dispatch(nextStep());
+    dispatch(saveCheckoutData(checkoutData));
     alert('Purchase Complete!');
+  };
 
+  const handleReset = () => {
     dispatch(reset());
   };
 
@@ -19,6 +24,7 @@ const CheckoutConfirmation = () => {
     <div>
       <h2>Confirmation</h2>
       <h3>Order Summary</h3>
+
       <h4>Account Details</h4>
       <p>Name: {form1.name}</p>
       <p>Email: {form1.email}</p>
@@ -38,11 +44,15 @@ const CheckoutConfirmation = () => {
 
       <h4>Payment Details</h4>
       <p>Credit Card Number: {form3.creditCardNumber}</p>
-      <p>Expiry Date: {form3.expiry}</p>
+      <p>Expiry Date: {form3.expiryDate}</p>
       <p>CVV: {form3.cvv}</p>
       <p>Billing Zip: {form3.billingZip}</p>
 
       <br></br>
+
+      <button onClick={() => dispatch(previousStep())}>Previous</button>
+
+      <button onClick={handleReset}>Reset</button>
 
       <button onClick={handleCompletePurchase}>Complete Purchase</button>
 

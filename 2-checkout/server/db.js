@@ -11,14 +11,19 @@ const connection = mysql.createConnection({
 
 const db = Promise.promisifyAll(connection, { multiArgs: true });
 
+const dbSessionTableQuery =
+  `CREATE TABLE IF NOT EXISTS sessions (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  session_id VARCHAR(255) NOT NULL,
+  checkout_data JSON NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);`;
+
 db.connectAsync()
   .then(() => console.log(`Connected to MySQL as id: ${db.threadId}`))
   .then(() =>
     // Expand this table definition as needed:
-    db.queryAsync(
-      'CREATE TABLE IF NOT EXISTS responses (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY)'
-    )
-  )
+    db.queryAsync(dbSessionTableQuery))
   .catch((err) => console.log(err));
 
 module.exports = db;

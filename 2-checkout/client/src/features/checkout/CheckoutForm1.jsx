@@ -1,13 +1,12 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { nextStep, setEmail, setForm1Completed, setName, setPassword } from './checkoutSlice.js';
+import { nextStep, reset, saveCheckoutData, setEmail, setForm1Completed, setName, setPassword } from './checkoutSlice.js';
 
 const CheckoutForm1 = () => {
   const dispatch = useDispatch();
-  const name = useSelector((state) => state.checkout.form1.name);
-  const email = useSelector((state) => state.checkout.form1.email);
-  const password = useSelector((state) => state.checkout.form1.password);
+  const { name, email, password } = useSelector((state) => state.checkout.form1);
+  const checkoutData = useSelector((state) => state.checkout);
 
   const handleNameChange = (event) => {
     dispatch(setName(event.target.value));
@@ -21,10 +20,15 @@ const CheckoutForm1 = () => {
     dispatch(setPassword(event.target.value));
   };
 
+  const handleReset = () => {
+    dispatch(reset());
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     dispatch(setForm1Completed());
     dispatch(nextStep());
+    dispatch(saveCheckoutData(checkoutData));
   };
 
   return (
@@ -49,6 +53,8 @@ const CheckoutForm1 = () => {
       </label>
 
       <br />
+
+      <button onClick={handleReset}>Start Over</button>
 
       <button type="submit">Next</button>
     </form>
