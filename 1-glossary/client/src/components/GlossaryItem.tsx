@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
+import React, { FC, FormEvent, useState } from 'react';
 
-const GlossaryItem = ({ item, onEdit, onDelete }) => {
-  const [editing, setEditing] = useState(false);
-  const [term, setTerm] = useState(item.term);
-  const [description, setDescription] = useState(item.description);
+import { GlossaryItem as GlossaryItemType } from '../types';
 
-  const handleSubmit = (event) => {
+interface Props {
+  item: GlossaryItemType;
+  onEdit: (item: GlossaryItemType) => void;
+  onDelete: (id: string) => void;
+}
+
+const GlossaryItem: FC<Props> = ({ item, onEdit, onDelete }) => {
+  const [editing, setEditing] = useState<boolean>(false);
+  const [term, setTerm] = useState<string>(item.term);
+  const [description, setDescription] = useState<string>(item.description);
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     onEdit({ _id: item._id, term, description });
     setEditing(false);
@@ -18,7 +26,9 @@ const GlossaryItem = ({ item, onEdit, onDelete }) => {
   };
 
   const handleDelete = () => {
-    onDelete(item._id);
+    if (item._id) {
+      onDelete(item._id);
+    }
   };
 
   return (

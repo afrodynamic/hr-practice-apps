@@ -1,7 +1,16 @@
-import React from 'react';
+import React, { Dispatch, FC, SetStateAction } from 'react';
 
-const GlossarySearch = ({ glossary, searchTerm, setSearchTerm, setFilteredGlossary }) => {
-  const handleSearch = (term) => {
+import { GlossaryItem } from '../types';
+
+interface Props {
+  glossary: GlossaryItem[];
+  searchTerm: string;
+  setSearchTerm: Dispatch<SetStateAction<string>>;
+  setFilteredGlossary: Dispatch<SetStateAction<GlossaryItem[]>>;
+}
+
+const GlossarySearch: FC<Props> = ({ glossary, searchTerm, setSearchTerm, setFilteredGlossary }) => {
+  const handleSearch = (term: string) => {
     if (term === '') {
       setSearchTerm('');
       setFilteredGlossary([]);

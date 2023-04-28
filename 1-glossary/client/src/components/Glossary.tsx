@@ -1,13 +1,14 @@
-import React, {useEffect} from 'react';
+import React, { FC, useEffect } from 'react';
 
-import GlossaryForm from './GlossaryForm.jsx';
-import GlossaryList from './GlossaryList.jsx';
-import GlossarySearch from './GlossarySearch.jsx';
+import { GlossaryItem } from '../types';
+import GlossaryForm from './GlossaryForm.tsx';
+import GlossaryList from './GlossaryList.tsx';
+import GlossarySearch from './GlossarySearch.tsx';
 
-const Glossary = () => {
-  const [glossary, setGlossary] = React.useState([]);
-  const [searchTerm, setSearchTerm] = React.useState('');
-  const [filteredGlossary, setFilteredGlossary] = React.useState([]);
+const Glossary: FC = () => {
+  const [glossary, setGlossary] = React.useState<GlossaryItem[]>([]);
+  const [searchTerm, setSearchTerm] = React.useState<string>('');
+  const [filteredGlossary, setFilteredGlossary] = React.useState<GlossaryItem[]>([]);
 
   const fetchGlossary = async() => {
     const response = await fetch('/api/glossary');

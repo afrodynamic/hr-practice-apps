@@ -1,9 +1,22 @@
-import React from 'react';
+import React, { Dispatch, FC, SetStateAction } from 'react';
 
-import GlossaryItem from './GlossaryItem.jsx';
+import GlossaryItem from './GlossaryItem';
 
-const GlossaryList = ({ glossary, setGlossary, searchTerm, filteredGlossary }) => {
-  const handleDelete = async(id) => {
+import { GlossaryItem as GlossaryItemType } from '../types';
+
+interface Props {
+  glossary: GlossaryItemType[];
+  setGlossary: Dispatch<SetStateAction<GlossaryItemType[]>>;
+  searchTerm: string;
+  filteredGlossary: GlossaryItemType[];
+}
+
+const GlossaryList: FC<Props> = ({ glossary, setGlossary, searchTerm, filteredGlossary }) => {
+  const handleDelete = async(id: string | undefined) => {
+    if (!id) {
+      return;
+    }
+
     try {
       const response = await fetch(`/api/glossary/${id}`, {
         method: 'DELETE',
@@ -19,7 +32,7 @@ const GlossaryList = ({ glossary, setGlossary, searchTerm, filteredGlossary }) =
     }
   };
 
-  const handleEdit = async(item) => {
+  const handleEdit = async(item: GlossaryItemType) => {
     const termExists = glossary.some(
       (existingItem) =>
         existingItem._id !== item._id && existingItem.term === item.term

@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 
-const GlossaryForm = ({ glossary, setGlossary }) => {
-  const [term, setTerm] = useState('');
-  const [description, setDescription] = useState('');
+import { GlossaryItem } from '../types';
 
-  const handleAdd = async(newItem) => {
+interface Props {
+  glossary: GlossaryItem[];
+  setGlossary: Dispatch<SetStateAction<GlossaryItem[]>>;
+}
+
+const GlossaryForm: React.FC<Props> = ({ glossary, setGlossary }) => {
+  const [term, setTerm] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+
+  const handleAdd = async(newItem: GlossaryItem) => {
     if (glossary.some(
       (item) => item.term.toLowerCase() === newItem.term.toLowerCase()
     )) {
@@ -22,19 +29,16 @@ const GlossaryForm = ({ glossary, setGlossary }) => {
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const data: GlossaryItem = await response.json();
 
-        setGlossary((prevGlossary) => [
-          ...prevGlossary,
-          data,
-        ]);
+        setGlossary((prevGlossary) => [...prevGlossary, data]);
       }
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     handleAdd({ term, description });
     setTerm('');
