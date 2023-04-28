@@ -18,7 +18,7 @@ export const saveCheckoutData = createAsyncThunk(
 
 const checkoutInitialState =
 {
-  step: 1,
+  step: 0,
   form1: {
     name: '',
     email: '',
