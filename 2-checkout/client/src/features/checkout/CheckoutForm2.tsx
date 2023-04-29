@@ -1,42 +1,42 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { ChangeEvent, FC, FormEvent } from 'react';
 
-import { nextStep, previousStep, saveCheckoutData, setCity, setForm2Completed, setLine1, setLine2, setPhoneNumber, setState, setZip } from './checkoutSlice.js';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { nextStep, previousStep, saveCheckoutData, setCity, setForm2Completed, setLine1, setLine2, setPhoneNumber, setState, setZip } from './checkoutSlice';
 
-const CheckoutForm2 = () => {
-  const dispatch = useDispatch();
-  const { line1, line2, city, state, zip, phoneNumber } = useSelector((state) => state.checkout.form2);
-  const checkoutData = useSelector(state => state.checkout);
+const CheckoutForm2: FC = () => {
+  const dispatch = useAppDispatch();
+  const { line1, line2, city, state, zip, phoneNumber } = useAppSelector((state) => state.checkout.form2);
+  const checkoutData = useAppSelector((state) => state.checkout);
 
-  const handleLine1Change = (event) => {
+  const handleLine1Change = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(setLine1(event.target.value));
   };
 
-  const handleLine2Change = (event) => {
+  const handleLine2Change = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(setLine2(event.target.value));
   };
 
-  const handleCityChange = (event) => {
+  const handleCityChange = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(setCity(event.target.value));
   };
 
-  const handleStateChange = (event) => {
+  const handleStateChange = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(setState(event.target.value));
   };
 
-  const handleZipChange = (event) => {
+  const handleZipChange = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(setZip(event.target.value));
   };
 
-  const handlePhoneNumberChange = (event) => {
+  const handlePhoneNumberChange = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(setPhoneNumber(event.target.value));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     dispatch(setForm2Completed());
     dispatch(nextStep());
-    dispatch(saveCheckoutData(checkoutData));
+    dispatch(saveCheckoutData());
   };
 
   return (

@@ -1,18 +1,18 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
 
-import { nextStep, previousStep, reset, saveCheckoutData, setCompleted } from './checkoutSlice.js';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { nextStep, previousStep, reset, saveCheckoutData, setCompleted } from './checkoutSlice';
 
-const CheckoutConfirmation = () => {
-  const dispatch = useDispatch();
-  const { form1, form2, form3 } = useSelector((state) => state.checkout);
-  const checkoutData = useSelector((state) => state.checkout);
+const CheckoutConfirmation: FC = () => {
+  const dispatch = useAppDispatch();
+  const { form1, form2, form3 } = useAppSelector((state) => state.checkout);
+  const checkoutData = useAppSelector((state) => state.checkout);
 
   const handleCompletePurchase = () => {
     dispatch(setCompleted());
     dispatch(nextStep());
-    dispatch(saveCheckoutData(checkoutData));
+    dispatch(saveCheckoutData());
     alert('Purchase Complete!');
   };
 

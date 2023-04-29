@@ -1,22 +1,22 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { ChangeEvent, FC, FormEvent } from 'react';
 
-import { nextStep, reset, saveCheckoutData, setEmail, setForm1Completed, setName, setPassword } from './checkoutSlice.js';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { nextStep, reset, saveCheckoutData, setEmail, setForm1Completed, setName, setPassword } from './checkoutSlice';
 
-const CheckoutForm1 = () => {
-  const dispatch = useDispatch();
-  const { name, email, password } = useSelector((state) => state.checkout.form1);
-  const checkoutData = useSelector((state) => state.checkout);
+const CheckoutForm1: FC = () => {
+  const dispatch = useAppDispatch();
+  const { name, email, password } = useAppSelector((state) => state.checkout.form1);
+  const checkoutData = useAppSelector((state) => state.checkout);
 
-  const handleNameChange = (event) => {
+  const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(setName(event.target.value));
   };
 
-  const handleEmailChange = (event) => {
+  const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(setEmail(event.target.value));
   };
 
-  const handlePasswordChange = (event) => {
+  const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(setPassword(event.target.value));
   };
 
@@ -24,11 +24,11 @@ const CheckoutForm1 = () => {
     dispatch(reset());
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     dispatch(setForm1Completed());
     dispatch(nextStep());
-    dispatch(saveCheckoutData(checkoutData));
+    dispatch(saveCheckoutData());
   };
 
   return (

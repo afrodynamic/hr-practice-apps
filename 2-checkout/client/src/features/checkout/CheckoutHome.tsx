@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { FC } from 'react';
 
-import { useDispatch } from 'react-redux';
-
+import { useAppDispatch } from '../../app/hooks';
 import { nextStep } from './checkoutSlice';
 
-const CheckoutHome = () => {
-  const dispatch = useDispatch();
+const CheckoutHome: FC = () => {
+  const dispatch = useAppDispatch();
 
   const handleStartCheckout = () => {
     dispatch(nextStep());

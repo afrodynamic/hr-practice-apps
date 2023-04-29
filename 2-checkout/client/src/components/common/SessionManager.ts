@@ -1,17 +1,21 @@
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { setCheckoutData } from '../../features/checkout/checkoutSlice';
 
 const SessionManager = () => {
-  const { checkoutData } = useSelector((state) => state.session);
-  const dispatch = useDispatch();
+  const checkoutData = useAppSelector((state) => state.checkout);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const data = JSON.parse(localStorage.getItem('sessionCheckoutData'));
+    if (!localStorage) {
+      return;
+    }
+
+    const data = localStorage.getItem('sessionCheckoutData');
 
     if (data) {
-      dispatch(setCheckoutData(data));
+      dispatch(setCheckoutData(JSON.parse(data)));
     }
   }, []);
 

@@ -1,34 +1,34 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { ChangeEvent, FC, FormEvent } from 'react';
 
-import { nextStep, previousStep, saveCheckoutData, setBillingZip, setCreditCardNumber, setCvv, setExpiry, setForm3Completed } from './checkoutSlice.js';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { nextStep, previousStep, saveCheckoutData, setBillingZip, setCreditCardNumber, setCvv, setExpiry, setForm3Completed } from './checkoutSlice';
 
-const CheckoutForm3 = () => {
-  const dispatch = useDispatch();
-  const { creditCardNumber, expiryDate, cvv, billingZip } = useSelector((state) => state.checkout.form3);
-  const checkoutData = useSelector((state) => state.checkout);
+const CheckoutForm3: FC = () => {
+  const dispatch = useAppDispatch();
+  const { creditCardNumber, expiryDate, cvv, billingZip } = useAppSelector((state) => state.checkout.form3);
+  const checkoutData = useAppSelector((state) => state.checkout);
 
-  const handleCreditCardNumberChange = (event) => {
+  const handleCreditCardNumberChange = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(setCreditCardNumber(event.target.value));
   };
 
-  const handleExpiryChange = (event) => {
+  const handleExpiryChange = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(setExpiry(event.target.value));
   };
 
-  const handleCvvChange = (event) => {
+  const handleCvvChange = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(setCvv(event.target.value));
   };
 
-  const handleBillingZipChange = (event) => {
+  const handleBillingZipChange = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(setBillingZip(event.target.value));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     dispatch(setForm3Completed());
     dispatch(nextStep());
-    dispatch(saveCheckoutData(checkoutData));
+    dispatch(saveCheckoutData());
   };
 
   return (

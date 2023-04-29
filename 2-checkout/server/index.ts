@@ -1,12 +1,15 @@
-require('dotenv').config();
-const express = require('express');
-const path = require('path');
-const sessionHandler = require('./middleware/session-handler');
-const logger = require('./middleware/logger');
-const httpProxy = require('http-proxy');
+import dotenv from 'dotenv';
+import express, { NextFunction, Request, Response } from 'express';
+import httpProxy from 'http-proxy';
+import path from 'path';
 
-// Establishes connection to the database on server start
-const db = require('./db');
+import { OkPacket, RowDataPacket } from 'mysql2/promise';
+import dbConnection from './db';
+import logger from './middleware/logger';
+import sessionHandler from './middleware/session-handler';
+import { CustomRequest } from './types';
+
+dotenv.config();
 
 const app = express();
 
@@ -25,7 +28,7 @@ app.use(express.static(path.join(__dirname, '../client/dist')));
 
 const proxy = httpProxy.createProxyServer();
 
-const devServerProxy = (request, response, next) => {
+const devServerProxy = (request: Request, response: Response, next: NextFunction) => {
   if (request.url.startsWith('/client/dist/')) {
     proxy.web(request, response, {
       target: 'http://localhost:8080',
@@ -37,26 +40,28 @@ const devServerProxy = (request, response, next) => {
 
 app.use(devServerProxy);
 
-app.post('/api/session', async(request, response, next) => {
-  const session_id = request.session_id;
+app.post('/api/session', async(request: CustomRequest, response: Response) => {
+  const session_id = request.session_id as string;
   const checkoutData = request.body;
   console.log('checkoutData: ', checkoutData);
 
   try {
-    const [rows] = await db.queryAsync(
+    const db = await dbConnection();
+
+    const [rows] = await db.query<RowDataPacket[]>(
       'SELECT * FROM sessions WHERE session_id = ? LIMIT 1',
       [session_id]
     );
 
-    if (rows.length) {
-      const result = await db.queryAsync(
+    if (rows && rows.length) {
+      const [result] = await db.query<OkPacket>(
         'UPDATE sessions SET checkout_data = ? WHERE session_id = ?',
         [JSON.stringify(checkoutData), session_id]
       );
 
       response.json({ success: true, id: result.insertId });
     } else {
-      const result = await db.queryAsync(
+      const [result] = await db.query<OkPacket>(
         'INSERT INTO sessions (session_id, checkout_data) VALUES (?, ?)',
         [session_id, JSON.stringify(checkoutData)]
       );
@@ -71,5 +76,6 @@ app.post('/api/session', async(request, response, next) => {
 
 const port = process.env.PORT || 3000;
 
-app.listen(port);
-console.log(`Listening at http://localhost:${port}`);
+app.listen(port, () => {
+  console.log(`Listening at http://localhost:${port}`);
+});
