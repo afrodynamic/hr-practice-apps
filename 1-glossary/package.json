@@ -6,7 +6,7 @@
     "server-dev": "npx nodemon --exec ts-node --watch server server/index.ts ",
     "client-dev": "npx webpack serve --hot",
     "build": "npx webpack",
-    "start": "node server/index.js"
+    "start": "npx concurrently \"npm run server-dev\" \"npm run client-dev\""
   },
   "license": "Unlicensed",
   "dependencies": {
